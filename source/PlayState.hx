@@ -53,6 +53,7 @@ class PlayState extends FlxState
 	{
 		enemiesKilled = 0;
 		yamsDelivered = 0;
+		FlxG.camera.bgColor = 0x9775a6;
 
 		//map = new FlxOgmo3Loader(AssetPaths.baseproj__ogmo, AssetPaths.baselevel__json);
 		map = new FlxOgmo3Loader(AssetPaths.baseproj__ogmo, AssetPaths.level2__json);

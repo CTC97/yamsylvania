@@ -57,8 +57,8 @@ class Player extends FlxSprite
         playerHealth = 3;
         hitCooldownSet = 90;
         hitCooldown = hitCooldownSet;
-        hurtCooldown = 10;
-        hurtCooldownSet = 10;
+        hurtCooldown = 20;
+        hurtCooldownSet = 20;
         invincible = false;
         isHurt = false;
 
@@ -170,6 +170,8 @@ class Player extends FlxSprite
     }
 
     public function getHit() {
+      FlxG.camera.bgColor = 0x9775a6;
+      FlxG.camera.shake(0.01, 0.15);
       invincible = true;
       playerHealth--;
       hurtSound.play();
