@@ -29,6 +29,8 @@ class Player extends FlxSprite
     var stepSound:FlxSound;
     var runSound:FlxSound;
 
+    var ammo:Int;
+
     public var stamina:Int = 1500;
    // public var staminaCoolDown:Int = 200;
 
@@ -40,6 +42,8 @@ class Player extends FlxSprite
         drag.x = drag.y = 640;
         setSize(48, 56);
         offset.set(4, 4);
+
+        ammo = 3;
 
         /* FOOTSTEP SOUNDS
 
@@ -153,6 +157,14 @@ class Player extends FlxSprite
 
     public function stopMovement() {
       up = down = left = right = false;
+    }
+    
+    public function getAmmo() {
+      return ammo;
+    }
+
+    public function addAmmo(amount:Int){
+      ammo += amount;
     }
 
 }

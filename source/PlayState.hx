@@ -21,13 +21,15 @@ class PlayState extends FlxState
 
 	var enemies:FlxTypedGroup<FlxSprite>;
 	var projectiles:FlxTypedGroup<Projectile>;
-
+	var plots:FlxTypedGroup<Plot>;
 	var sortGroup:FlxTypedGroup<FlxSprite>;
 
 	var player_shoot:Bool;
 	var playerProjectileCooldown = 0;
 
 	var createEnemyCooldown:Int = 30;
+
+	var flxRandom:FlxRandom;
 
 	override public function create()
 	{
@@ -46,11 +48,15 @@ class PlayState extends FlxState
 
 		add(walls);
 
+		plots = new FlxTypedGroup<Plot>();
+		add(plots);
+		
+		sortGroup = new FlxTypedGroup<FlxSprite>();
+		add(sortGroup);
+
 		projectiles = new FlxTypedGroup<Projectile>();
 		add(projectiles);
 
-		sortGroup = new FlxTypedGroup<FlxSprite>();
-		add(sortGroup);
 
 		player = new Player();
 		enemies = new FlxTypedGroup<FlxSprite>();
@@ -59,6 +65,8 @@ class PlayState extends FlxState
 
 
 		FlxG.camera.follow(player, TOPDOWN, 1);
+
+		flxRandom = new FlxRandom();
 
 		super.create();
 	    /*var text = new flixel.text.FlxText(0, 0, 0, "Hello World", 64);
@@ -69,21 +77,19 @@ class PlayState extends FlxState
 	override public function update(elapsed:Float)
 	{
 		super.update(elapsed);
-		
+		// boundaries of 256 on all sides for x, y
 		if (createEnemyCooldown <= 0) {
 			var createEnemy:Int = Math.round(Math.random() * 100)+enemiesKilled;
-			trace("createEnemy", createEnemy);
 			if (createEnemy > 50) {
-				trace("creating enemy");
-				var enemyType:Int = Math.round(Math.random() * 10);
-				if (enemyType < 5) {
-					trace("creating vamp");
-					var tempEnemy:Vamp = new Vamp(200 + 4, 200, player);
+				var enemyType:Bool = flxRandom.bool();
+				var x:Float = flxRandom.float(64*4, 64*16);
+				var y:Float = flxRandom.float(64*4, 64*16);
+				if (enemyType) {
+					var tempEnemy:Vamp = new Vamp(x, y, player);
 					enemies.add(tempEnemy);
 					sortGroup.add(tempEnemy);
 				} else {
-					trace("creating bat");
-					var tempEnemy:Bat = new Bat(500, 500, player);
+					var tempEnemy:Bat = new Bat(x, y, player);
 					enemies.add(tempEnemy);
 					sortGroup.add(tempEnemy);
 				}
@@ -100,13 +106,15 @@ class PlayState extends FlxState
 		FlxG.collide(enemies, walls);
 		FlxG.overlap(player, enemies, collideWithEnemy);
 		FlxG.overlap(projectiles, enemies, projectileHitEnemy);
+		FlxG.overlap(player, plots, playerOverlapPlot);
 		FlxG.collide(projectiles, walls, projectileHitWall);
 
 		player_shoot = FlxG.keys.anyPressed([E]);
 		if (playerProjectileCooldown > 0) playerProjectileCooldown = playerProjectileCooldown - 1;
-		if (playerProjectileCooldown <= 0 && player_shoot) {
+		if (playerProjectileCooldown <= 0 && player_shoot && player.getAmmo() > 0) {
+			player.addAmmo(-1);
 			projectiles.add(new Projectile(player.x, player.y, FlxG.mouse.x, FlxG.mouse.y));
-			playerProjectileCooldown = 100;
+			playerProjectileCooldown = 10;
 		}
 
 	}
@@ -124,6 +132,10 @@ class PlayState extends FlxState
 		 		enemies.add(tempEnemy);
 				sortGroup.add(tempEnemy);
 			}
+			if (entity.name == "plot") {
+				var tempPlot:Plot = new Plot(entity.x, entity.y);
+				plots.add(tempPlot);
+			}
 	}
 
 	function collideWithEnemy(player: Player, enemy: FlxSprite) {
@@ -140,5 +152,12 @@ class PlayState extends FlxState
 
 	function projectileHitWall(projectile: Projectile, wall: FlxTilemap) {
 		projectile.kill();
+	}
+
+	function playerOverlapPlot(player: Player, plot: Plot) {
+		if (plot.getState() == 4) {
+			player.addAmmo(flxRandom.int(2, 10));
+			plot.setState(0);
+		}
 	}
 }

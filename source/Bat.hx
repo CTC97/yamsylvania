@@ -22,7 +22,7 @@ class Bat extends FlxSprite
         setSize(48, 28);
         offset.set(4, 4);
 
-        speed = Math.round(Math.random() * 100) + 10;
+        speed = Math.round(Math.random() * 150) + 10;
 
         animation.add("fly", [0, 1, 2, 1], 12, true);
         animation.play("fly");
