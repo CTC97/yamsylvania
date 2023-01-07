@@ -31,7 +31,14 @@ class Player extends FlxSprite
 
     var ammo:Int;
 
+    var playerHealth:Int;
+    var hitCooldown:Int;
+    var hitCooldownSet:Int;
+
     public var stamina:Int = 1500;
+    var invincible:Bool;
+
+    var hurtSound:FlxSound;
    // public var staminaCoolDown:Int = 200;
 
     public function new(x:Float = 0, y:Float = 0)
@@ -44,6 +51,12 @@ class Player extends FlxSprite
         offset.set(4, 4);
 
         ammo = 3;
+        playerHealth = 3;
+        hitCooldownSet = 90;
+        hitCooldown = hitCooldownSet;
+        invincible = false;
+
+        hurtSound = FlxG.sound.load(AssetPaths.playerHurt__wav);
 
         /* FOOTSTEP SOUNDS
 
@@ -66,6 +79,18 @@ class Player extends FlxSprite
 
     function updateMovement()
     {
+      if (invincible) {
+        alpha = 0.5;
+        if (hitCooldown <= 0) {
+          invincible = false;
+          hitCooldown = hitCooldownSet;
+        } else {
+          hitCooldown--;
+        }
+      } else {
+        alpha = 1;
+      }
+
       up = FlxG.keys.anyPressed([UP, W]);
       down = FlxG.keys.anyPressed([DOWN, S]);
       left = FlxG.keys.anyPressed([LEFT, A]);
@@ -158,13 +183,32 @@ class Player extends FlxSprite
     public function stopMovement() {
       up = down = left = right = false;
     }
-    
+
     public function getAmmo() {
       return ammo;
     }
 
     public function addAmmo(amount:Int){
       ammo += amount;
+    }
+
+    public function getHealth() {
+      return health;
+    }
+
+    public function getHit() {
+      invincible = true;
+      playerHealth--;
+      hurtSound.play();
+      if (playerHealth == 0) {
+        trace("ENEMIES KILLED: ", PlayState.getEnemiesKilled());
+        trace("YAMS DELIVERED: ", PlayState.getYamsDelivered());
+        FlxG.switchState(new MenuState());
+      }
+    }
+
+    public function getInvincible() {
+      return invincible;
     }
 
 }

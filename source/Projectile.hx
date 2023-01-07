@@ -6,6 +6,7 @@ import flixel.FlxG;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRandom;
 import flixel.math.FlxVelocity;
+import flixel.system.FlxSound;
 
 class Projectile extends FlxSprite
 {
@@ -44,7 +45,9 @@ class Projectile extends FlxSprite
 
         speed = 300;
 
-
+        var projectileSound:FlxSound = FlxG.sound.load(AssetPaths.projectile__wav);
+        //projectileSound.volume = 0.1;
+        projectileSound.play();
 
       /*  setFacingFlip(LEFT, false, false);
         setFacingFlip(RIGHT, true, false);*/
@@ -60,7 +63,7 @@ class Projectile extends FlxSprite
         if(!moving) {
           moving = true;
           FlxVelocity.moveTowardsPoint(this, FlxPoint.weak(xDest, yDest), speed);
-          trace(velocity.x, velocity.y);
+          //trace(velocity.x, velocity.y);
           velX = velocity.x;
           velY = velocity.y;
         }

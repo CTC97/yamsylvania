@@ -1,5 +1,6 @@
 package;
 
+import flixel.system.FlxSound;
 import flixel.FlxState;
 import flixel.addons.editors.ogmo.FlxOgmo3Loader;
 import flixel.tile.FlxTilemap;
@@ -14,14 +15,13 @@ class PlayState extends FlxState
 {
 	var player:Player;
 
-	var enemiesKilled:Int = 0;
-
 	var map:FlxOgmo3Loader;
 	var walls:FlxTilemap;
 
 	var enemies:FlxTypedGroup<FlxSprite>;
 	var projectiles:FlxTypedGroup<Projectile>;
 	var plots:FlxTypedGroup<Plot>;
+	var outbins:FlxTypedGroup<Outbin>;
 	var sortGroup:FlxTypedGroup<FlxSprite>;
 
 	var player_shoot:Bool;
@@ -30,6 +30,11 @@ class PlayState extends FlxState
 	var createEnemyCooldown:Int = 30;
 
 	var flxRandom:FlxRandom;
+
+	private var plotSound:FlxSound;
+
+	static var yamsDelivered:Int = 0;
+	static var enemiesKilled:Int = 0;
 
 	override public function create()
 	{
@@ -50,6 +55,9 @@ class PlayState extends FlxState
 
 		plots = new FlxTypedGroup<Plot>();
 		add(plots);
+
+		outbins = new FlxTypedGroup<Outbin>();
+		add(outbins);
 		
 		sortGroup = new FlxTypedGroup<FlxSprite>();
 		add(sortGroup);
@@ -67,6 +75,8 @@ class PlayState extends FlxState
 		FlxG.camera.follow(player, TOPDOWN, 1);
 
 		flxRandom = new FlxRandom();
+
+		plotSound = FlxG.sound.load(AssetPaths.harvest__wav);
 
 		super.create();
 	    /*var text = new flixel.text.FlxText(0, 0, 0, "Hello World", 64);
@@ -108,6 +118,8 @@ class PlayState extends FlxState
 		FlxG.overlap(projectiles, enemies, projectileHitEnemy);
 		FlxG.overlap(player, plots, playerOverlapPlot);
 		FlxG.collide(projectiles, walls, projectileHitWall);
+		FlxG.overlap(player, outbins, playerCollideOutbin);
+		FlxG.collide(outbins, walls);
 
 		player_shoot = FlxG.keys.anyPressed([E]);
 		if (playerProjectileCooldown > 0) playerProjectileCooldown = playerProjectileCooldown - 1;
@@ -136,10 +148,15 @@ class PlayState extends FlxState
 				var tempPlot:Plot = new Plot(entity.x, entity.y);
 				plots.add(tempPlot);
 			}
+			if (entity.name == "outbin") {
+				var tempOutbin:Outbin = new Outbin(entity.x, entity.y);
+				outbins.add(tempOutbin);
+			}
 	}
 
 	function collideWithEnemy(player: Player, enemy: FlxSprite) {
-		if (player.alive && player.exists && enemy.alive && enemy.exists) {
+		if (!player.getInvincible() && player.alive && player.exists && enemy.alive && enemy.exists) {
+			player.getHit();
 			trace("collide");
 		}
 	}
@@ -156,8 +173,24 @@ class PlayState extends FlxState
 
 	function playerOverlapPlot(player: Player, plot: Plot) {
 		if (plot.getState() == 4) {
+			plotSound.play();
 			player.addAmmo(flxRandom.int(2, 10));
 			plot.setState(0);
 		}
+	}
+
+	function playerCollideOutbin(player: Player, outbin: Outbin) {
+		if (player.getAmmo() > 0 && FlxG.keys.anyJustReleased([Q])) {
+			player.addAmmo(-1);
+			yamsDelivered++;
+		}
+	}
+
+	public static function getEnemiesKilled() {
+		return enemiesKilled;
+	}
+
+	public static function getYamsDelivered() {
+		return yamsDelivered;
 	}
 }

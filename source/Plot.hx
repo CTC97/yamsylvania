@@ -38,7 +38,7 @@ class Plot extends FlxSprite
 
     function updatePlot()
     {
-        trace("updating plot ", growthTime);
+        //trace("updating plot ", growthTime);
         if (growthTime <= 0) {
             if (state < 4) {
                 state++;
@@ -47,7 +47,7 @@ class Plot extends FlxSprite
         } else {
             growthTime--;
         }
-        trace("playing ", Std.string(state));
+        //trace("playing ", Std.string(state));
 
         animation.play(Std.string(state));
     }
