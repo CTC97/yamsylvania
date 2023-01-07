@@ -11,6 +11,7 @@ class Main extends Sprite
 		super();
 
 		FlxG.autoPause=false;
+		Stats.readStats();
 
 		addChild(new FlxGame(768, 576, MenuState, 60, 60, true));
 

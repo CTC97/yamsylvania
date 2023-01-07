@@ -6,6 +6,7 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.ui.FlxButton;
 import flixel.FlxG;
+import flixel.util.FlxSave;
 
 class MenuState extends FlxState
 {
@@ -47,6 +48,18 @@ class MenuState extends FlxState
     lore.loadGraphic(AssetPaths.loreblink__png, true, 96, 27);
     lore.animation.add("blink", [0, 1], 3, false);
     add(lore);
+
+    var deliveries = new flixel.text.FlxText(8, 8, 0, "Total Deliveries: " + Std.string(Stats.getSave().data.delivered), 12);
+    deliveries.screenCenter();
+    deliveries.y = 440;
+    deliveries.color = 0x9775a6;
+    add(deliveries);
+
+    var kills = new flixel.text.FlxText(8, 8, 0, "Total Slain: " + Std.string(Stats.getSave().data.killed), 12);
+    kills.screenCenter();
+    kills.y = 460;
+    kills.color = 0x9775a6;
+    add(kills);
 	}
 
 	override public function update(elapsed:Float)

@@ -83,6 +83,8 @@ class DeathScreen extends FlxState
     public function setStats(kills: Int, deliveries: Int) {
         numKills = kills;
         numDels = deliveries;
+
+        Stats.writeStats(deliveries, kills);
     }
 
 }

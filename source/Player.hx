@@ -54,7 +54,7 @@ class Player extends FlxSprite
         offset.set(24, 28);
 
         ammo = 3;
-        playerHealth = 3;
+        playerHealth = 5;
         hitCooldownSet = 90;
         hitCooldown = hitCooldownSet;
         hurtCooldown = 20;
@@ -191,7 +191,7 @@ class Player extends FlxSprite
     }
 
     public function toFullHealth() {
-      playerHealth = 3;
+      playerHealth = 5;
     }
 
     public function getGarlic() {

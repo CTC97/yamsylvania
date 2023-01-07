@@ -177,7 +177,7 @@ class PlayState extends FlxState
 		FlxG.overlap(player, itemDrops, collectItemDrop);
 		FlxG.collide(outbins, walls);
 
-		player_shoot = FlxG.keys.anyPressed([E]);
+		player_shoot = (FlxG.keys.anyPressed([E]) || FlxG.mouse.pressed);
 		if (playerProjectileCooldown > 0) playerProjectileCooldown = playerProjectileCooldown - 1;
 		if (playerProjectileCooldown <= 0 && player_shoot && player.getAmmo() > 0) {
 			player.addAmmo(-1);
