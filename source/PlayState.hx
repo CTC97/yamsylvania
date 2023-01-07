@@ -10,6 +10,7 @@ import flixel.group.FlxGroup;
 import flixel.FlxSprite;
 import flixel.util.FlxSort;
 import flixel.math.FlxRandom;
+import flixel.system.FlxAssets;
 
 class PlayState extends FlxState
 {
@@ -35,6 +36,10 @@ class PlayState extends FlxState
 
 	static var yamsDelivered:Int = 0;
 	static var enemiesKilled:Int = 0;
+
+	var healthText:FlxText;
+
+	var hud:HUD;
 
 	override public function create()
 	{
@@ -78,15 +83,24 @@ class PlayState extends FlxState
 
 		plotSound = FlxG.sound.load(AssetPaths.harvest__wav);
 
+		//FlxAssets.FONT_DEFAULT = "assets/fonts/pixelicons.ttf";
+
+		// healthText = new FlxText(4, 4, 0, "Health: " + Std.string(player.getPlayerHealth()), 16);
+		// healthText.scrollFactor.set(0, 0);
+		// //healthText.systemFont = "assets/fonts/pixelicons.ttf";
+		// healthText.setFormat("assets/fonts/alagard.ttf", 64);
+	    // add(healthText);
+
+		hud = new HUD();
+		add(hud);
+
 		super.create();
-	    /*var text = new flixel.text.FlxText(0, 0, 0, "Hello World", 64);
-	    text.screenCenter();
-	    add(text);*/
 	}
 
 	override public function update(elapsed:Float)
 	{
 		super.update(elapsed);
+	
 		// boundaries of 256 on all sides for x, y
 		if (createEnemyCooldown <= 0) {
 			var createEnemy:Int = Math.round(Math.random() * 100)+enemiesKilled;

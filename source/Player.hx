@@ -48,7 +48,7 @@ class Player extends FlxSprite
          /* "assets/images/clouba.png" */
         drag.x = drag.y = 640;
         setSize(48, 56);
-        offset.set(4, 4);
+        offset.set(24, 28);
 
         ammo = 3;
         playerHealth = 3;
@@ -192,8 +192,8 @@ class Player extends FlxSprite
       ammo += amount;
     }
 
-    public function getHealth() {
-      return health;
+    public function getPlayerHealth() {
+      return playerHealth;
     }
 
     public function getHit() {
