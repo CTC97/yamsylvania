@@ -54,7 +54,8 @@ class PlayState extends FlxState
 		enemiesKilled = 0;
 		yamsDelivered = 0;
 
-		map = new FlxOgmo3Loader(AssetPaths.baseproj__ogmo, AssetPaths.baselevel__json);
+		//map = new FlxOgmo3Loader(AssetPaths.baseproj__ogmo, AssetPaths.baselevel__json);
+		map = new FlxOgmo3Loader(AssetPaths.baseproj__ogmo, AssetPaths.level2__json);
 		walls = map.loadTilemap(AssetPaths.tilemap__png, "walls");
 		walls.follow();
 
@@ -215,7 +216,10 @@ class PlayState extends FlxState
 	function projectileHitEnemy(projectile: Projectile, enemy: FlxSprite) {
 		var dropItem = flxRandom.int(0, 20);
 		if (dropItem > 17) {
-			var tempItem:ItemDrop = new ItemDrop(enemy.x, enemy.y, "apple");
+			var typeDrop = flxRandom.int(0, 5);
+			var tempItem:ItemDrop;
+			if (typeDrop <= 3) tempItem = new ItemDrop(enemy.x + flxRandom.int(0, 20), enemy.y + flxRandom.int(0, 20), "apple");
+			else tempItem = new ItemDrop(enemy.x + flxRandom.int(0, 20), enemy.y + flxRandom.int(0, 20), "garlic");
 			itemDrops.add(tempItem);
 		}
 		projectile.kill();
@@ -225,7 +229,8 @@ class PlayState extends FlxState
 	}
 
 	function collectItemDrop(_player: Player, _item: ItemDrop) {
-		_player.toFullHealth();
+		if (_item.getItemName() == "apple") _player.toFullHealth();
+		if (_item.getItemName() == "garlic") _player.getGarlic();
 		_item.kill();
 	}
 

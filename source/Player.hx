@@ -192,4 +192,9 @@ class Player extends FlxSprite
       playerHealth = 3;
     }
 
+    public function getGarlic() {
+      invincible = true;
+      hitCooldown = hitCooldownSet * 2;
+    }
+
 }

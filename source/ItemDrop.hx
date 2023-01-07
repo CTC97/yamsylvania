@@ -13,7 +13,8 @@ class ItemDrop extends FlxSprite
    {
        super(x, y);
        name = name_;
-       loadGraphic(AssetPaths.apple__png, false, 24, 28);
+       if (name == "apple") loadGraphic(AssetPaths.apple__png, false, 24, 28);
+       if (name == "garlic") loadGraphic(AssetPaths.garlic__png, false, 28, 26);
        FlxTween.tween(this, {alpha: 0, alive: false}, 5, {onComplete: finishKill});
    }
 
@@ -33,5 +34,9 @@ class ItemDrop extends FlxSprite
    function finishKill(_)
    {
        exists = false;
+   }
+
+   public function getItemName() {
+    return name;
    }
 }
