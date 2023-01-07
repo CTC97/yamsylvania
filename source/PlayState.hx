@@ -130,7 +130,7 @@ class PlayState extends FlxState
 					x = flxRandom.float(64*4, 64*16);
 					y = flxRandom.float(64*4, 64*16);
 					validSpawn = true;
-					if (Math.abs(player.x-x) < 32 || Math.abs(player.y-y) < 32) {
+					if (Math.abs(player.x-x) < 96 || Math.abs(player.y-y) < 96) {
 						validSpawn = false; 
 						trace("invalid spawn prevented");
 					}
@@ -172,6 +172,8 @@ class PlayState extends FlxState
 			playerProjectileCooldown = 10;
 			throwYamSound.play();
 		}
+
+		hud.updateHud(player.getPlayerHealth(), player.getAmmo(), enemiesKilled, yamsDelivered);
 
 	}
 

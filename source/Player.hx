@@ -37,6 +37,9 @@ class Player extends FlxSprite
     var invincible:Bool;
 
     var hurtSound:FlxSound;
+    var hurtCooldown:Int;
+    var hurtCooldownSet:Int;
+    var isHurt:Bool;
    // public var staminaCoolDown:Int = 200;
 
     public function new(x:Float = 0, y:Float = 0)
@@ -54,7 +57,10 @@ class Player extends FlxSprite
         playerHealth = 3;
         hitCooldownSet = 90;
         hitCooldown = hitCooldownSet;
+        hurtCooldown = 10;
+        hurtCooldownSet = 10;
         invincible = false;
+        isHurt = false;
 
         hurtSound = FlxG.sound.load(AssetPaths.playerHurt__wav);
 
@@ -73,6 +79,7 @@ class Player extends FlxSprite
         animation.add("left", [7,8], 8, false);
         animation.add("idle_left", [10,9], 4, false);
         animation.add("start", [0], 3, false);
+        animation.add("hurt", [1], 3, false);
     }
 
     function updateMovement()
@@ -128,6 +135,15 @@ class Player extends FlxSprite
           if (!movedYet) animation.play("start");
         }
       }
+
+      if (isHurt && hurtCooldown > 0) {
+        animation.play("hurt");
+        hurtCooldown--;
+        if (hurtCooldown <= 0) {
+          hurtCooldown = hurtCooldownSet;
+          isHurt = false;
+        }
+      }
     }
 
     override function update(elapsed:Float)
@@ -157,10 +173,14 @@ class Player extends FlxSprite
       invincible = true;
       playerHealth--;
       hurtSound.play();
+      isHurt = true;
+      animation.play("hurt");
       if (playerHealth == 0) {
         trace("ENEMIES KILLED: ", PlayState.getEnemiesKilled());
         trace("YAMS DELIVERED: ", PlayState.getYamsDelivered());
-        FlxG.switchState(new MenuState());
+        var deathScreen = new DeathScreen();
+        deathScreen.setStats(PlayState.getEnemiesKilled(), PlayState.getYamsDelivered());
+        FlxG.switchState(deathScreen);
       }
     }
 
