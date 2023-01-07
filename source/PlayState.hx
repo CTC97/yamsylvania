@@ -34,8 +34,8 @@ class PlayState extends FlxState
 
 	private var plotSound:FlxSound;
 
-	static var yamsDelivered:Int = 0;
-	static var enemiesKilled:Int = 0;
+	static var yamsDelivered:Int;
+	static var enemiesKilled:Int;
 
 	var healthText:FlxText;
 
@@ -43,6 +43,9 @@ class PlayState extends FlxState
 
 	override public function create()
 	{
+		enemiesKilled = 0;
+		yamsDelivered = 0;
+
 		map = new FlxOgmo3Loader(AssetPaths.baseproj__ogmo, AssetPaths.baselevel__json);
 		walls = map.loadTilemap(AssetPaths.tilemap__png, "walls");
 		walls.follow();

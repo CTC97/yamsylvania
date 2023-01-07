@@ -16,5 +16,9 @@ class Main extends Sprite
 
 		//FlxG.mouse.visible = false;
 		//FlxG.mouse.load(AssetPaths.mouse__png);
+		if (FlxG.sound.music == null) // don't restart the music if it's already playing
+		{
+			FlxG.sound.playMusic(AssetPaths.yamsylvaniatheme__ogg, 1, true);
+		}
 	}
 }

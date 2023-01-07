@@ -9,7 +9,7 @@ import flixel.system.FlxSound;
 class Player extends FlxSprite
 {
     //static inline var speed:Float = 200;
-    var speed:Float = 200;
+    var speed:Float = 250;
 
     // left = false, right = true
     var idle_right:Bool = true;
@@ -22,8 +22,6 @@ class Player extends FlxSprite
     var left:Bool = false;
     var right:Bool = false;
 
-    var running:Bool = false;
-
     var movement:Float = 0;
 
     var stepSound:FlxSound;
@@ -35,7 +33,6 @@ class Player extends FlxSprite
     var hitCooldown:Int;
     var hitCooldownSet:Int;
 
-    public var stamina:Int = 1500;
     var invincible:Bool;
 
     var hurtSound:FlxSound;
@@ -46,7 +43,7 @@ class Player extends FlxSprite
         super(x, y);
         loadGraphic(AssetPaths.farmerlarge__png, true, 48, 56);
          /* "assets/images/clouba.png" */
-        drag.x = drag.y = 640;
+        drag.x = drag.y = 400;
         setSize(48, 56);
         offset.set(24, 28);
 
@@ -68,12 +65,9 @@ class Player extends FlxSprite
         // offset controls the position of the hitbox
         offset.set(4, 4);
 
-      /*  setFacingFlip(LEFT, false, false);
-        setFacingFlip(RIGHT, true, false);*/
-
-        animation.add("right", [2,3], 8, false);
+        animation.add("right", [2,3], 12, false);
         animation.add("idle_right", [0,0,1], 6, false);
-        animation.add("left", [4,5], 6, false);
+        animation.add("left", [4,5], 12, false);
         animation.add("idle_left", [6, 6, 7], 6, false);
     }
 
@@ -96,55 +90,10 @@ class Player extends FlxSprite
       left = FlxG.keys.anyPressed([LEFT, A]);
       right = FlxG.keys.anyPressed([RIGHT, D]);
 
-      running = FlxG.keys.anyPressed([SHIFT]);
-
-      if (stamina < 0) {
-        running = false;
-        //if (stamina == 0) { stamina = staminaCoolDown; }
-      }
-      //if (stamina > 0)
-      if (running) {
-      /*  if (velocity.x != 0 || velocity.y != 0) {
-          //stepSound.stop();
-          runSound.play();
-        }*/
-       /* stamina = stamina - 3;
-        if (stamina > 0) {
-          speed = 200;
-        } else { running = false; }*/
-        //if (left || right) { animation.curAnim.frameRate = 60; }
-        speed = 200;
-      } else {
-      //  runSound.stop();
-        speed = 100;
-        //stamina = stamina + 3;
-        //if (stamina > 1100) {stamina = 1100; }
-      }
-
       if (up && down)
           up = down = false;
-      /*if (up && left)
-          up = left = false;
-      if (up && right)
-          up = right = false;*/
       if (left && right)
           left = right = false;
-     /* if (left && down)
-          left = down = false;
-      if (down && right)
-          down = right = false;*/
-
-    /*  if (up || down || left || right) {
-        still = false;
-        if (running)
-          runSound.play();
-        else
-          stepSound.play();
-      } else {
-        still = true;
-        runSound.stop();
-        stepSound.stop();
-      }*/
 
       if (up) {
         //last_direction = "up";
