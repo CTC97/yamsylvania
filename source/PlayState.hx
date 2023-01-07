@@ -25,6 +25,7 @@ class PlayState extends FlxState
 	var plots:FlxTypedGroup<Plot>;
 	var outbins:FlxTypedGroup<Outbin>;
 	var sortGroup:FlxTypedGroup<FlxSprite>;
+	var itemDrops:FlxTypedGroup<ItemDrop>;
 
 	var player_shoot:Bool;
 	var playerProjectileCooldown = 0;
@@ -79,6 +80,9 @@ class PlayState extends FlxState
 
 		projectiles = new FlxTypedGroup<Projectile>();
 		add(projectiles);
+
+		itemDrops = new FlxTypedGroup<ItemDrop>();
+		add(itemDrops);
 
 
 		player = new Player();
@@ -162,6 +166,7 @@ class PlayState extends FlxState
 		FlxG.overlap(player, plots, playerOverlapPlot);
 		FlxG.collide(projectiles, walls, projectileHitWall);
 		FlxG.overlap(player, outbins, playerCollideOutbin);
+		FlxG.overlap(player, itemDrops, collectItemDrop);
 		FlxG.collide(outbins, walls);
 
 		player_shoot = FlxG.keys.anyPressed([E]);
@@ -208,10 +213,20 @@ class PlayState extends FlxState
 	}
 
 	function projectileHitEnemy(projectile: Projectile, enemy: FlxSprite) {
+		var dropItem = flxRandom.int(0, 20);
+		if (dropItem > 17) {
+			var tempItem:ItemDrop = new ItemDrop(enemy.x, enemy.y, "apple");
+			itemDrops.add(tempItem);
+		}
 		projectile.kill();
 		enemy.kill();
 		enemiesKilled++;
 		enemyDie.play();
+	}
+
+	function collectItemDrop(_player: Player, _item: ItemDrop) {
+		_player.toFullHealth();
+		_item.kill();
 	}
 
 	function projectileHitWall(projectile: Projectile, wall: FlxTilemap) {

@@ -188,4 +188,8 @@ class Player extends FlxSprite
       return invincible;
     }
 
+    public function toFullHealth() {
+      playerHealth = 3;
+    }
+
 }
