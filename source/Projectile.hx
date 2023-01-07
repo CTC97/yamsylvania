@@ -34,16 +34,16 @@ class Projectile extends FlxSprite
     public function new(x:Float = 0, y:Float = 0, _xDest:Float, _yDest:Float)
     {
         super(x, y);
-        loadGraphic(AssetPaths.projectile__png, true, 25, 25);
+        loadGraphic(AssetPaths.yamlarge__png, true, 30, 30);
          /* "assets/images/clouba.png" */
         drag.x = drag.y = 640;
-        setSize(25, 25);
+        setSize(30, 30);
         offset.set(4, 4);
 
         xDest = _xDest;
         yDest = _yDest;
 
-        speed = 300;
+        speed = 350;
 
         var projectileSound:FlxSound = FlxG.sound.load(AssetPaths.projectile__wav);
         //projectileSound.volume = 0.1;

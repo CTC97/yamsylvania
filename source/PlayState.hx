@@ -1,5 +1,6 @@
 package;
 
+import flixel.tweens.FlxTween;
 import flixel.system.FlxSound;
 import flixel.FlxState;
 import flixel.addons.editors.ogmo.FlxOgmo3Loader;
@@ -33,9 +34,15 @@ class PlayState extends FlxState
 	var flxRandom:FlxRandom;
 
 	private var plotSound:FlxSound;
+	private var depositSound:FlxSound;
+	private var throwYamSound:FlxSound;
+	private var enemyDie:FlxSound;
 
 	static var yamsDelivered:Int;
 	static var enemiesKilled:Int;
+
+	private var depositCooldown:Int;
+	private var depositCooldownSet:Int;
 
 	var healthText:FlxText;
 
@@ -85,6 +92,10 @@ class PlayState extends FlxState
 		flxRandom = new FlxRandom();
 
 		plotSound = FlxG.sound.load(AssetPaths.harvest__wav);
+		depositSound = FlxG.sound.load(AssetPaths.deposityam__wav);
+	 	throwYamSound = FlxG.sound.load(AssetPaths.throwyam__wav);
+		enemyDie = FlxG.sound.load(AssetPaths.enemydie__wav);
+
 
 		//FlxAssets.FONT_DEFAULT = "assets/fonts/pixelicons.ttf";
 
@@ -96,6 +107,9 @@ class PlayState extends FlxState
 
 		hud = new HUD();
 		add(hud);
+
+		depositCooldown = 5;
+		depositCooldownSet = 5;
 
 		super.create();
 	}
@@ -109,8 +123,18 @@ class PlayState extends FlxState
 			var createEnemy:Int = Math.round(Math.random() * 100)+enemiesKilled;
 			if (createEnemy > 50) {
 				var enemyType:Bool = flxRandom.bool();
-				var x:Float = flxRandom.float(64*4, 64*16);
-				var y:Float = flxRandom.float(64*4, 64*16);
+				var validSpawn:Bool = false;
+				var x:Float = 0;
+				var y:Float = 0;
+				while(!validSpawn) {
+					x = flxRandom.float(64*4, 64*16);
+					y = flxRandom.float(64*4, 64*16);
+					validSpawn = true;
+					if (Math.abs(player.x-x) < 32 || Math.abs(player.y-y) < 32) {
+						validSpawn = false; 
+						trace("invalid spawn prevented");
+					}
+				}
 				if (enemyType) {
 					var tempEnemy:Vamp = new Vamp(x, y, player);
 					enemies.add(tempEnemy);
@@ -125,6 +149,8 @@ class PlayState extends FlxState
 		} else {
 			createEnemyCooldown--;
 		}
+
+		depositCooldown--;
 
 
 		sortGroup.sort(FlxSort.byY, FlxSort.ASCENDING);
@@ -144,6 +170,7 @@ class PlayState extends FlxState
 			player.addAmmo(-1);
 			projectiles.add(new Projectile(player.x, player.y, FlxG.mouse.x, FlxG.mouse.y));
 			playerProjectileCooldown = 10;
+			throwYamSound.play();
 		}
 
 	}
@@ -182,6 +209,7 @@ class PlayState extends FlxState
 		projectile.kill();
 		enemy.kill();
 		enemiesKilled++;
+		enemyDie.play();
 	}
 
 	function projectileHitWall(projectile: Projectile, wall: FlxTilemap) {
@@ -197,9 +225,11 @@ class PlayState extends FlxState
 	}
 
 	function playerCollideOutbin(player: Player, outbin: Outbin) {
-		if (player.getAmmo() > 0 && FlxG.keys.anyJustReleased([Q])) {
+		if (depositCooldown <= 0 && player.getAmmo() > 0 && FlxG.keys.anyJustReleased([Q])) {
 			player.addAmmo(-1);
 			yamsDelivered++;
+			displayYam(outbin);
+			depositCooldown = depositCooldownSet;
 		}
 	}
 
@@ -209,5 +239,16 @@ class PlayState extends FlxState
 
 	public static function getYamsDelivered() {
 		return yamsDelivered;
+	}
+
+	public function displayYam(outbin: Outbin) {
+		trace("displaying yam");
+		var tempYamVisual:FlxSprite = new FlxSprite(outbin.x + flxRandom.int(0, 32), outbin.y);
+		tempYamVisual.loadGraphic(AssetPaths.yamlarge__png, true, 30, 30);
+		tempYamVisual.animation.add("one", [0], 6, false);
+		tempYamVisual.animation.play("one");
+		add(tempYamVisual);
+		depositSound.play();
+		FlxTween.tween(tempYamVisual, {y: 0, alpha: 0, exists: false, alive:false}, 2);
 	}
 }
