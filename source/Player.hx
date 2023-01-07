@@ -9,6 +9,7 @@ import flixel.system.FlxSound;
 class Player extends FlxSprite
 {
     //static inline var speed:Float = 200;
+    var movedYet:Bool;
     var speed:Float = 250;
 
     // left = false, right = true
@@ -41,10 +42,12 @@ class Player extends FlxSprite
     public function new(x:Float = 0, y:Float = 0)
     {
         super(x, y);
-        loadGraphic(AssetPaths.farmerlarge__png, true, 48, 56);
+        movedYet = false;
+
+        loadGraphic(AssetPaths.farmernewlarge__png, true, 42, 72);
          /* "assets/images/clouba.png" */
         drag.x = drag.y = 400;
-        setSize(48, 56);
+        setSize(42, 72);
         offset.set(24, 28);
 
         ammo = 3;
@@ -65,10 +68,11 @@ class Player extends FlxSprite
         // offset controls the position of the hitbox
         offset.set(4, 4);
 
-        animation.add("right", [2,3], 12, false);
-        animation.add("idle_right", [0,0,1], 6, false);
-        animation.add("left", [4,5], 12, false);
-        animation.add("idle_left", [6, 6, 7], 6, false);
+        animation.add("right", [5,6], 8, false);
+        animation.add("idle_right", [3,4], 4, false);
+        animation.add("left", [7,8], 8, false);
+        animation.add("idle_left", [10,9], 4, false);
+        animation.add("start", [0], 3, false);
     }
 
     function updateMovement()
@@ -116,9 +120,13 @@ class Player extends FlxSprite
 
       if ((velocity.x != 0 || velocity.y != 0))// && touching == NONE)
       {
+        movedYet = true;
         animation.play(last_direction);
       } else {
-        if (still) { animation.play(("idle_"+last_direction)); }
+        if (still) { 
+          animation.play(("idle_"+last_direction));
+          if (!movedYet) animation.play("start");
+        }
       }
     }
 

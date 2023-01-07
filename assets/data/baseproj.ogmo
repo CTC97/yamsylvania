@@ -40,7 +40,7 @@
       "exportID": "30130128",
       "name": "player",
       "limit": -1,
-      "size": {"x": 32, "y": 56},
+      "size": {"x": 24, "y": 48},
       "origin": {"x": 0, "y": 0},
       "originAnchored": true,
       "shape": {
@@ -57,7 +57,7 @@
       "color": "#26ff00ff",
       "tileX": false,
       "tileY": false,
-      "tileSize": {"x": 32, "y": 56},
+      "tileSize": {"x": 42, "y": 72},
       "resizeableX": false,
       "resizeableY": false,
       "rotatable": false,
