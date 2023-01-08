@@ -22,6 +22,11 @@ class Stats
         _gameSave.flush();
     }
 
+    public static function reset() {
+        _gameSave.data.delivered = 0;
+         _gameSave.data.killed = 0;
+    }
+
     public static function getSave():FlxSave {
         return _gameSave;
     }

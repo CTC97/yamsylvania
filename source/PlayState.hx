@@ -55,8 +55,16 @@ class PlayState extends FlxState
 		yamsDelivered = 0;
 		FlxG.camera.bgColor = 0x9775a6;
 
+		flxRandom = new FlxRandom();
+
 		//map = new FlxOgmo3Loader(AssetPaths.baseproj__ogmo, AssetPaths.baselevel__json);
-		map = new FlxOgmo3Loader(AssetPaths.baseproj__ogmo, AssetPaths.level2__json);
+		var levelLoad:Int = flxRandom.int(0, 2);
+		trace("level load ", levelLoad);
+		if (levelLoad == 0) map = new FlxOgmo3Loader(AssetPaths.baseproj__ogmo, AssetPaths.level3__json);
+		else if (levelLoad == 1) map = new FlxOgmo3Loader(AssetPaths.baseproj__ogmo, AssetPaths.level2__json);
+		else map = new FlxOgmo3Loader(AssetPaths.baseproj__ogmo, AssetPaths.baselevel__json);
+
+		
 		walls = map.loadTilemap(AssetPaths.tilemap__png, "walls");
 		walls.follow();
 
@@ -74,6 +82,8 @@ class PlayState extends FlxState
 		walls.setTileProperties(11, ANY);
 		walls.setTileProperties(12, ANY);
 		walls.setTileProperties(13, ANY);
+		walls.setTileProperties(14, ANY);
+		walls.setTileProperties(15, ANY);
 
 		add(walls);
 
@@ -100,8 +110,6 @@ class PlayState extends FlxState
 
 
 		FlxG.camera.follow(player, TOPDOWN, 1);
-
-		flxRandom = new FlxRandom();
 
 		plotSound = FlxG.sound.load(AssetPaths.harvest__wav);
 		depositSound = FlxG.sound.load(AssetPaths.deposityam__wav);
