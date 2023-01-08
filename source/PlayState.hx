@@ -38,6 +38,7 @@ class PlayState extends FlxState
 	private var depositSound:FlxSound;
 	private var throwYamSound:FlxSound;
 	private var enemyDie:FlxSound;
+	private var pickupItemSound:FlxSound;
 
 	static var yamsDelivered:Int;
 	static var enemiesKilled:Int;
@@ -59,6 +60,7 @@ class PlayState extends FlxState
 
 		//map = new FlxOgmo3Loader(AssetPaths.baseproj__ogmo, AssetPaths.baselevel__json);
 		var levelLoad:Int = flxRandom.int(0, 2);
+		if (Stats.getSave().data.delivered == 0 && Stats.getSave().data.killed == 0) levelLoad = 2;
 		trace("level load ", levelLoad);
 		if (levelLoad == 0) map = new FlxOgmo3Loader(AssetPaths.baseproj__ogmo, AssetPaths.level3__json);
 		else if (levelLoad == 1) map = new FlxOgmo3Loader(AssetPaths.baseproj__ogmo, AssetPaths.level2__json);
@@ -115,6 +117,7 @@ class PlayState extends FlxState
 		depositSound = FlxG.sound.load(AssetPaths.deposityam__wav);
 	 	throwYamSound = FlxG.sound.load(AssetPaths.throwyam__wav);
 		enemyDie = FlxG.sound.load(AssetPaths.enemydie__wav);
+		pickupItemSound = FlxG.sound.load(AssetPaths.pickupitem__wav);
 
 
 		//FlxAssets.FONT_DEFAULT = "assets/fonts/pixelicons.ttf";
@@ -244,6 +247,7 @@ class PlayState extends FlxState
 	}
 
 	function collectItemDrop(_player: Player, _item: ItemDrop) {
+		if (_item.exists) pickupItemSound.play();
 		if (_item.getItemName() == "apple") _player.toFullHealth();
 		if (_item.getItemName() == "garlic") _player.getGarlic();
 		_item.kill();

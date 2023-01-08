@@ -43,7 +43,7 @@ class Projectile extends FlxSprite
         xDest = _xDest;
         yDest = _yDest;
 
-        speed = 350;
+        speed = 450;
 
         var projectileSound:FlxSound = FlxG.sound.load(AssetPaths.projectile__wav);
         //projectileSound.volume = 0.1;

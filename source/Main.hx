@@ -13,7 +13,7 @@ class Main extends Sprite
 		FlxG.autoPause=false;
 		
 		Stats.readStats();
-		Stats.reset(); // REMOVE FOR FULL BUILD
+		//Stats.reset(); // REMOVE FOR FULL BUILD
 
 		addChild(new FlxGame(768, 576, MenuState, 60, 60, true));
 
