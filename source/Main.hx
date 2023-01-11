@@ -15,13 +15,13 @@ class Main extends Sprite
 		Stats.readStats();
 		//Stats.reset(); // REMOVE FOR FULL BUILD
 
-		addChild(new FlxGame(768, 576, MenuState, 60, 60, true));
+		addChild(new FlxGame(768, 576, LocustSandbox, 60, 60, true));
 
 		//FlxG.mouse.visible = false;
 		FlxG.mouse.load(AssetPaths.yammouse__png);
 		if (FlxG.sound.music == null) // don't restart the music if it's already playing
 		{
-			FlxG.sound.playMusic(AssetPaths.yamsylvaniatheme__ogg, 1, true);
+			//FlxG.sound.playMusic(AssetPaths.yamsylvaniatheme__ogg, 1, true);
 		}
 	}
 }
