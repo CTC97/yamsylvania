@@ -30,7 +30,9 @@
       "gridCellsY": 14,
       "entities": [
         {"name": "yilith", "id": 0, "_eid": "42077293", "x": 458, "y": 256, "originX": 0, "originY": 0},
-        {"name": "player", "id": 1, "_eid": "30130128", "x": 460, "y": 576, "originX": 0, "originY": 0}
+        {"name": "player", "id": 1, "_eid": "30130128", "x": 460, "y": 576, "originX": 0, "originY": 0},
+        {"name": "scuddler", "id": 2, "_eid": "66276697", "x": 256, "y": 448, "originX": 0, "originY": 0},
+        {"name": "scuddler", "id": 3, "_eid": "66276697", "x": 576, "y": 448, "originX": 0, "originY": 0}
       ]
     }
   ]

@@ -22,6 +22,7 @@ class Player extends FlxSprite
     var down:Bool = false;
     var left:Bool = false;
     var right:Bool = false;
+    var dashing:Bool = false;
 
     var movement:Float = 0;
 
@@ -40,6 +41,14 @@ class Player extends FlxSprite
     var hurtCooldown:Int;
     var hurtCooldownSet:Int;
     var isHurt:Bool;
+
+    var dashLength:Int;
+    var dashCooldown:Int;
+    var dashLengthSet:Int;
+    var dashCooldownSet:Int; 
+    var inDash:Bool;
+
+    var speedSet:Float;
    // public var staminaCoolDown:Int = 200;
 
     public function new(x:Float = 0, y:Float = 0)
@@ -47,11 +56,18 @@ class Player extends FlxSprite
         super(x, y);
         movedYet = false;
 
+        speedSet = speed;
+
         loadGraphic(AssetPaths.farmernewlarge__png, true, 42, 72);
          /* "assets/images/clouba.png" */
-        drag.x = drag.y = 400;
+        drag.x = drag.y = 150;
         setSize(42, 72);
         offset.set(24, 28);
+
+        dashLengthSet = 20;
+        dashCooldownSet = 150;
+        dashLength = dashLengthSet;
+        dashCooldown = dashCooldownSet;
 
         ammo = 3;
         playerHealth = 5;
@@ -61,6 +77,7 @@ class Player extends FlxSprite
         hurtCooldownSet = 20;
         invincible = false;
         isHurt = false;
+        inDash = false;
 
         hurtSound = FlxG.sound.load(AssetPaths.playerHurt__wav);
 
@@ -100,31 +117,43 @@ class Player extends FlxSprite
       down = FlxG.keys.anyPressed([DOWN, S]);
       left = FlxG.keys.anyPressed([LEFT, A]);
       right = FlxG.keys.anyPressed([RIGHT, D]);
+      dashing = FlxG.keys.anyJustPressed([SHIFT]);
 
-      if (up && down)
+      /*if (up && down)
           up = down = false;
       if (left && right)
-          left = right = false;
+          left = right = false;*/
 
-      if (up) {
-        //last_direction = "up";
-        velocity.y = -1*speed;
+      if (!dashing) {
+        if (up) {
+          trace("up");
+          //last_direction = "up";
+          velocity.y = -1*speed;
+        }
+        if (down) {
+          trace("down");
+          //last_direction = "down";
+          velocity.y = speed;
+        }
+        if (left) {
+          trace("left");
+          last_direction = "left";
+          velocity.x = -1*speed;
+        }
+        if (right) {
+          trace("right");
+          last_direction = "right";
+          velocity.x = speed;
+        } 
+        if(!up && !down && !left && !right) {
+          velocity.x = velocity.y = 0;
+        }
+      } else if(dashCooldown <= 0) {
+        trace("dashing");
+        inDash = true;
+        dashCooldown = dashCooldownSet;
       }
-      else if (down) {
-        //last_direction = "down";
-        velocity.y = speed;
-      }
-      else if (left) {
-        last_direction = "left";
-        velocity.x = -1*speed;
-      }
-      else if (right) {
-        last_direction = "right";
-        velocity.x = speed;
-      } else {
-        velocity.x = velocity.y = 0;
-      }
-
+      
       if ((velocity.x != 0 || velocity.y != 0))// && touching == NONE)
       {
         movedYet = true;
@@ -150,6 +179,21 @@ class Player extends FlxSprite
     {
         updateMovement();
 
+        if (inDash && dashLength > 0) {
+          trace("IN DASH + DASHING");
+          speed = speedSet * 2;
+          dashLength--;
+          if (dashLength <= 0) {
+            dashLength = dashLengthSet;
+            dashCooldown = dashCooldownSet;
+            inDash = false;
+            speed = speedSet;
+          }
+        }
+
+        if (dashCooldown > 0) dashCooldown--;
+         
+        
         super.update(elapsed);
     }
 

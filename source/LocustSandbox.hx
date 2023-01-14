@@ -25,6 +25,7 @@ class LocustSandbox extends FlxState
 	var sortGroup:FlxTypedGroup<FlxSprite>;
 	var itemDrops:FlxTypedGroup<ItemDrop>;
     var flies:FlxTypedGroup<Fly>;
+	var scuddlers:FlxTypedGroup<Scuddler>;
 
 	var player_shoot:Bool;
 	var playerProjectileCooldown = 0;
@@ -81,6 +82,9 @@ class LocustSandbox extends FlxState
         flies = new FlxTypedGroup<Fly>();
         add(flies);
 
+		scuddlers = new FlxTypedGroup<Scuddler>();
+		//add(scuddlers);
+
 		player = new Player();
 		enemies = new FlxTypedGroup<FlxSprite>();
 
@@ -112,6 +116,7 @@ class LocustSandbox extends FlxState
 		FlxG.overlap(projectiles, enemies, projectileHitEnemy);
 		FlxG.collide(projectiles, walls, projectileHitWall);
 		FlxG.overlap(player, itemDrops, collectItemDrop);
+		FlxG.collide(scuddlers, walls);
 
 		player_shoot = (FlxG.keys.anyPressed([E]) || FlxG.mouse.pressed);
 		if (playerProjectileCooldown > 0) playerProjectileCooldown = playerProjectileCooldown - 1;
@@ -122,7 +127,7 @@ class LocustSandbox extends FlxState
 			//throwYamSound.play();
 		}
 
-        if (createFlyCooldown <= 0) {
+        /*if (createFlyCooldown <= 0) {
 			//var createFly:Int = Math.round(Math.random() * 100);
 			//if (createFly > 10) {
             var yilithHand:Bool = flxRandom.bool();
@@ -138,7 +143,7 @@ class LocustSandbox extends FlxState
 			createFlyCooldown = 2;
 		} else {
 			createFlyCooldown--;
-		}
+		}*/
 
 		//hud.updateHud(player.getPlayerHealth(), player.getAmmo(), enemiesKilled, yamsDelivered);
 
@@ -157,6 +162,12 @@ class LocustSandbox extends FlxState
 		 		enemies.add(tempEnemy);
 				sortGroup.add(tempEnemy);
 			}
+			if (entity.name == "scuddler")
+				{
+					var tempScuddler:Scuddler = new Scuddler(entity.y + 4, entity.x + 4);
+					scuddlers.add(tempScuddler);
+					sortGroup.add(tempScuddler);
+				}
             if (entity.name == "yilith")
             {
                 yilith = new Yilith(entity.x + 4, entity.y + 4, player);
